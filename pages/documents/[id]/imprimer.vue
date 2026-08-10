@@ -36,7 +36,7 @@ function printDocument() {
     <template v-else-if="doc">
       <div class="no-print mx-auto mb-6 flex max-w-[210mm] items-center justify-between px-2">
         <NuxtLink :to="`/documents/${doc.id}`">
-          <BaseButton variant="ghost" type="button">← Retour au document</BaseButton>
+          <BaseButton variant="secondary" type="button">← Retour au document</BaseButton>
         </NuxtLink>
         <BaseButton type="button" @click="printDocument">Imprimer / PDF</BaseButton>
       </div>

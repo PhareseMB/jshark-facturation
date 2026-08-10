@@ -131,8 +131,8 @@ async function onSave() {
       </div>
     </div>
 
-    <div class="grid gap-8 lg:grid-cols-5">
-      <div class="flex flex-col gap-6 lg:col-span-3">
+    <div class="grid min-w-0 gap-8 lg:grid-cols-5">
+      <div class="flex min-w-0 flex-col gap-6 lg:col-span-3">
         <div v-if="!documentId" class="inline-flex w-fit rounded-lg border border-abyss-500 bg-abyss-800 p-1">
           <button
             v-for="option in typeOptions"
@@ -183,7 +183,7 @@ async function onSave() {
         </section>
       </div>
 
-      <div class="lg:sticky lg:top-6 lg:col-span-2 lg:self-start">
+      <div class="min-w-0 lg:sticky lg:top-6 lg:col-span-2 lg:self-start">
         <p class="mb-3 text-xs font-semibold uppercase tracking-wide text-slate-500">Aperçu en temps réel</p>
         <DocumentPreview :document="previewDocument" />
       </div>
