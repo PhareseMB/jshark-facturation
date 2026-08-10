@@ -1,0 +1,43 @@
+@import url('https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Archivo+Expanded:wght@700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    color-scheme: dark;
+  }
+
+  body {
+    @apply bg-abyss-900 text-slate-100 font-sans antialiased;
+  }
+
+  ::selection {
+    @apply bg-glacier-400/30 text-white;
+  }
+
+  /* Focus clavier visible partout, jamais supprimé */
+  :focus-visible {
+    @apply outline-none ring-2 ring-glacier-400 ring-offset-2 ring-offset-abyss-900;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-abyss-900;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-abyss-500 rounded-full;
+  }
+}
+
+@layer utilities {
+  .font-nums {
+    @apply font-mono tabular-nums;
+  }
+}
