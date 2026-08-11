@@ -1,4 +1,3 @@
-import * as XLSX from 'xlsx'
 import type { DocumentListItem } from '~/composables/useDocuments'
 import type { DocumentStatut, DocumentType } from '~/types/database.types'
 
@@ -14,7 +13,12 @@ const statutLabels: Record<DocumentStatut, string> = {
 }
 
 export function useExcelExport() {
-  function exportDocuments(documents: DocumentListItem[], filename = 'historique-jshark') {
+  async function exportDocuments(documents: DocumentListItem[], filename = 'historique-jshark') {
+    // Import dynamique côté client uniquement : `xlsx` ne doit jamais entrer dans
+    // le bundle serveur (Vercel échoue à tracer son module optionnel cpexcel.js,
+    // ce qui fait planter tout le SSR si l'import est statique en haut de fichier).
+    const XLSX = await import('xlsx')
+
     const rows = documents.map((d) => ({
       Numéro: d.numero,
       Type: typeLabels[d.type],
@@ -41,13 +45,19 @@ export function useExcelExport() {
       { wch: 12 }, // Statut
     ]
 
+    const applyFormat = (row: number, col: number, format: string) => {
+      const ref = XLSX.utils.encode_cell({ r: row, c: col })
+      const cell = worksheet[ref]
+      if (cell) cell.z = format
+    }
+
     const range = XLSX.utils.decode_range(worksheet['!ref'] ?? 'A1')
     for (let row = range.s.r + 1; row <= range.e.r; row++) {
-      applyFormat(worksheet, row, 3, 'dd/mm/yyyy') // Date
-      applyFormat(worksheet, row, 4, 'dd/mm/yyyy') // Échéance
-      applyFormat(worksheet, row, 5, '#,##0 "FCFA"') // Total HT
-      applyFormat(worksheet, row, 6, '0.00"%"') // TVA %
-      applyFormat(worksheet, row, 7, '#,##0 "FCFA"') // Total TTC
+      applyFormat(row, 3, 'dd/mm/yyyy') // Date
+      applyFormat(row, 4, 'dd/mm/yyyy') // Échéance
+      applyFormat(row, 5, '#,##0 "FCFA"') // Total HT
+      applyFormat(row, 6, '0.00"%"') // TVA %
+      applyFormat(row, 7, '#,##0 "FCFA"') // Total TTC
     }
 
     const workbook = XLSX.utils.book_new()
@@ -56,10 +66,4 @@ export function useExcelExport() {
   }
 
   return { exportDocuments }
-}
-
-function applyFormat(worksheet: XLSX.WorkSheet, row: number, col: number, format: string) {
-  const ref = XLSX.utils.encode_cell({ r: row, c: col })
-  const cell = worksheet[ref]
-  if (cell) cell.z = format
 }
